@@ -9,7 +9,7 @@ const PageContainer = styled.div`
     height: 100vh; 
 `;
 
-const WrittingPage = () => {
+const ContinuingStory = () => {
     return (
         <PageContainer>
             <Bar />
@@ -17,4 +17,4 @@ const WrittingPage = () => {
     );
 }
 
-export default WrittingPage;
+export default ContinuingStory;

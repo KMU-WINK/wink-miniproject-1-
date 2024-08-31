@@ -9,7 +9,7 @@ const PageContainer = styled.div`
     height: 100vh; 
 `;
 
-const WrittingPage = () => {
+const Top10 = () => {
     return (
         <PageContainer>
             <Bar />
@@ -17,4 +17,4 @@ const WrittingPage = () => {
     );
 }
 
-export default WrittingPage;
+export default Top10;

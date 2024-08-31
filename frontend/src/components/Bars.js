@@ -3,13 +3,14 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const WebBar = styled.div`
-    height: 61px;
+    height: 50px;
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: flex-start;
     border: 1px solid #C8C8C8;
     background: #E7F8FF;
+    padding-left-16px;
 `;
 
 const HomeLink = styled(Link)`
@@ -35,18 +36,18 @@ const HomeLink = styled(Link)`
     }       
 `;
 
-const LoginLink = styled(Link)`
+const Top10Link = styled(Link)`
     display: flex;
-    width: 94px;
+    width: 92px;
     height: 49px;
     flex-direction: column;
     justify-content: center;
     flex-shrink: 0;
     align-items: center;
 
-    color: #000;
-
     text-decoration: none;
+    color: #000;
+    text-align: center;
     font-family: var(--Title-Large-Font, Roboto);
     font-size: var(--Title-Large-Size, 22px);
     font-style: normal;
@@ -55,14 +56,15 @@ const LoginLink = styled(Link)`
     letter-spacing: var(--Title-Large-Tracking, 0px);
     &:hover {
         color: #6C6C6C;
-    } 
-`
+    }       
+`;
+
 
 const Bar = () => {
     return (
         <WebBar>
             <HomeLink to ="/mainpage">Home</HomeLink>
-            <LoginLink to ="/LoginPage">Login</LoginLink>
+            <Top10Link to ="/Top10">Top10</Top10Link>
         </WebBar>
     )
 }

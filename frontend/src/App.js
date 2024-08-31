@@ -2,8 +2,10 @@ import React from 'react';
 import { createGlobalStyle } from 'styled-components';
 import { Route, Routes } from 'react-router-dom';
 import DetailPage from './Pages/DetailPage';
-import LoginPage from './Pages/LoginPage';
 import MainPage from './Pages/MainPage';
+import WrittingPage from './Pages/WrittingPage';
+import ContinuingStory from './Pages/ContiuingStory';
+import Top10 from './Pages/Top10';
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -16,14 +18,14 @@ const App = () => {
     <>
       <GlobalStyle />
       <Routes>
-        <Route path="/" element={<DetailPage />} />
+        <Route path="/detailpage" element={<DetailPage />} />
         <Route path="/mainpage" element={<MainPage />} />
-        <Route path="/loginpage" element={<LoginPage />} />
+        <Route path="/writtingpage" element={<WrittingPage />} />
+        <Route path="/continuingstory" element={<ContinuingStory />} />
+        <Route path="/Top10" element={<Top10 />} />
       </Routes>
     </>
   );
 }
 
 export default App;
-
-
