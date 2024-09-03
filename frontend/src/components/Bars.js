@@ -63,7 +63,7 @@ const Top10Link = styled(Link)`
 const Bar = () => {
     return (
         <WebBar>
-            <HomeLink to ="/mainpage">Home</HomeLink>
+            <HomeLink to ="/">Home</HomeLink>
             <Top10Link to ="/Top10">Top10</Top10Link>
         </WebBar>
     )

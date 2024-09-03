@@ -19,7 +19,7 @@ const App = () => {
       <GlobalStyle />
       <Routes>
         <Route path="/detailpage" element={<DetailPage />} />
-        <Route path="/mainpage" element={<MainPage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/writtingpage" element={<WrittingPage />} />
         <Route path="/continuingstory" element={<ContinuingStory />} />
         <Route path="/Top10" element={<Top10 />} />

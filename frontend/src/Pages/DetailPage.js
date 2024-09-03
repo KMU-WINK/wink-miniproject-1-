@@ -13,7 +13,7 @@ const PageContainer = styled.div`
 const ButtonContainer = styled.div`
     display: flex;
     justify-content: center; 
-    padding: 30px; 
+    padding: 35px; 
 `;
 
 const DetailPage = () => {
