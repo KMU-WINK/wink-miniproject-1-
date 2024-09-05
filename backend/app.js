@@ -34,6 +34,7 @@ sequelize.sync({ force: false })
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')));
+app.use(express.static(path.join(__dirname, '../frontend/build')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -50,12 +51,20 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 app.use('/', pageRouter);
-app.use('/auth', authRouter);
-app.use('/post', postRouter);
-app.use('/user', userRouter);
+app.use('/detailpage', postRouter);
+app.use('/writingpage', authRouter);
+app.use('/continuingpage', postRouter); //수정페이지
+app.use('/Top10', postRouter);
+//app.use('/user', userRouter);
+
+
+// catch-all 라우트 추가
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/build/index.html'));
+});
 
 app.use((req, res, next) => {
-  const error =  new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
   error.status = 404;
   next(error);
 });

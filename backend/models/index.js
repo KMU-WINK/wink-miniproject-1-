@@ -5,6 +5,11 @@ const User = require('./user');
 const Post = require('./post');
 const Hashtag = require('./hashtag');
 
+User.associate = (models) => {
+  // 예: User는 여러 Post를 가질 수 있음 (1:N 관계)
+  User.hasMany(models.Post);
+};
+
 const db = {};
 const sequelize = new Sequelize(
   config.database, config.username, config.password, config,
