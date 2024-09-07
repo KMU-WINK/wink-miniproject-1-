@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
 import Bar from '../components/Bars';
 
 const PageContainer = styled.div`
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; 
-    height: 100vh; 
+    height: 100vh;
+    box-sizing: border-box;
+`;
+
+const ButtonWrapper = styled.div`
+    margin-top: auto;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
 `;
 
 const CustomH2 = styled.h2`
@@ -20,34 +27,34 @@ const CustomH2 = styled.h2`
     margin-left: 30px; 
 `;
 
-const InputName = styled.input`
-    width: 1325px;
-    height: 40px;
+const InputName = styled.textarea`
+    width: calc(100% - 150px);
+    max-width: 1325px;
+    min-height: 40px;
     padding: 10px;
-    margin: 20px 0;
+    margin: 20px auto;
     border: 1px solid #C8C8C8;
     border-radius: 5px;
     font-size: 16px;
     margin-left: 75px;
-    display: flex;
-    min-width: 240px;
-    align-items: center;
-    align-self: stretch;
+    display: block;
+    resize: none; 
+    box-sizing: border-box;
 `;
 
-const InputStory = styled.input`
-    width: 1325px;
-    height: 40px;
+const InputStory = styled.textarea`
+    width: calc(100% - 150px);
+    max-width: 1325px;
+    min-height: 40px; 
     padding: 10px;
-    margin: 20px 0;
+    margin: 20px auto;
     border: 1px solid #C8C8C8;
     border-radius: 5px;
     font-size: 16px;
     margin-left: 75px;
-    display: flex;
-    min-width: 240px;
-    align-items: center;
-    align-self: stretch;
+    display: block;
+    resize: vertical; 
+    box-sizing: border-box;
 `;
 
 const MyComponent = () => {
@@ -60,6 +67,7 @@ const NameLabel = styled.label`
     line-height: 140%; /* 22.4px */
     margin-left: 75px;
 `;
+
 const StoryLabel = styled.label`
     align-self: stretch;
     font-style: normal;
@@ -68,7 +76,41 @@ const StoryLabel = styled.label`
     margin-top: 30px;
 `;
 
+const Button = styled.button`
+    padding: 10px 20px;
+    background-color: #E7F8FF;
+    color: black;
+    border: 1px solid #C8C8C8;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: auto;
+    margin-bottom: 15px;
+
+    &:hover {
+        background-color: #4DCAFF;
+        color: white;
+    }
+`;
+
+// Textarea 자동 크기 조절 핸들러
+const useAutoResize = (ref) => {
+    useEffect(() => {
+        const handleInput = () => {
+            const textarea = ref.current;
+            textarea.style.height = 'auto'; 
+            textarea.style.height = `${textarea.scrollHeight}px`; 
+        };
+
+        const textarea = ref.current;
+        textarea.addEventListener('input', handleInput);
+        return () => textarea.removeEventListener('input', handleInput);
+    }, [ref]);
+};
+
 const ContinuingStory = () => {
+    const inputStoryRef = useRef(null);
+    useAutoResize(inputStoryRef);
+
     return (
         <PageContainer>
             <Bar />
@@ -76,7 +118,14 @@ const ContinuingStory = () => {
             <NameLabel htmlFor="nickname">닉네임</NameLabel>
             <InputName id="nickname" placeholder="사용할 닉네임을 입력해주세요." />
             <StoryLabel htmlFor='story'>내용</StoryLabel>
-            <InputStory id="story" placeholder="이어갈 소설의 내용을 입력해주세요." />
+            <InputStory
+                id="story"
+                placeholder="이어갈 소설의 내용을 입력해주세요."
+                ref={inputStoryRef}
+            />
+            <ButtonWrapper>
+                <Button>제출하기</Button>
+            </ButtonWrapper>
         </PageContainer>
     );
 }
