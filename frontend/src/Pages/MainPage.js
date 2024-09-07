@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import Bar from '../components/Bars';
 import HeartToggle from '../components/HeartToggle';
 import WritePostButton from '../components/WritePostButton'; 
+import MoreInfoButton from '../components/MoreInfoButton.js'; 
 
 const PageContainer = styled.div`
     position: relative;
@@ -99,6 +100,7 @@ const Mainpage = () => {
                 <Line size="40px" bold>모두와 함께 스토리를 작성하다</Line>
                 <Line size="40px"></Line>
                 <Line size="30px">다른 사람과 함께 이야기를 이어나가 보세요!</Line>
+                <MoreInfoButton />
             </MainBox>
             <ButtonContainer>
                 <WritePostButton />
