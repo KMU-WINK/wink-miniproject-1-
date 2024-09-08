@@ -6,6 +6,9 @@ const session = require('express-session');
 const nunjucks = require('nunjucks');
 const dotenv = require('dotenv');
 const passport = require('passport');
+const mysql = require('mysql2');
+const bodyParser = require('body-parser');
+const port = 3000;
 
 dotenv.config();
 const pageRouter = require('./routes/page');
@@ -30,6 +33,28 @@ sequelize.sync({ force: false })
   .catch((err) => {
     console.error(err);
   });
+
+app.use(bodyParser.json());
+
+app.post('/api/submit', (req, res) => {
+    const { nickname, story } = req.body;
+
+    // 입력값 검증 (옵션)
+    if (!nickname || !story) {
+        return res.status(400).json({ error: '닉네임과 이야기는 필수 항목입니다.' });
+    }
+
+    // 데이터베이스에 데이터 삽입
+    const query = 'INSERT INTO stories (nickname, story) VALUES (?, ?)';
+    connection.query(query, [nickname, story], (err, results) => {
+        if (err) {
+            console.error('Error inserting data:', err);
+            return res.status(500).json({ error: '서버 오류입니다.' });
+        }
+        res.status(200).json({ message: '데이터가 성공적으로 저장되었습니다.' });
+    });
+});
+
 
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
