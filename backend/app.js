@@ -9,6 +9,7 @@ const passport = require('passport');
 const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const port = 3000;
+const cors = require('cors');
 
 dotenv.config();
 const pageRouter = require('./routes/page');
@@ -19,8 +20,11 @@ const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
 const app = express();
+
+app.use(cors());
+
 passportConfig(); // 패스포트 설정
-app.set('port', process.env.PORT || 8001);
+app.set('port', process.env.PORT || 3000);
 app.set('view engine', 'html');
 nunjucks.configure('views', {
   express: app,

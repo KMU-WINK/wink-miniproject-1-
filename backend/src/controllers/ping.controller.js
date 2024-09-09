@@ -6,3 +6,4 @@ const ping = (req, res, next) => {
 
 module.exports = {
   ping,
+};
