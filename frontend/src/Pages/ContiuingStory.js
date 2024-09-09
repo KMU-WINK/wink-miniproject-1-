@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from 'react';
 import styled from 'styled-components';
-import Bar from '../components/Bars';
+import Bar from '../components/Header';
 
 const PageContainer = styled.div`
     display: flex;

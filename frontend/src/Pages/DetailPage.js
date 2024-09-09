@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import Bar from '../components/Bars';
-import Button from '../components/PlusButton';
+import Bar from '../components/Header';
+import Button from '../components/Buttons/PlusButton';
 
 const PageContainer = styled.div`
     display: flex;

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import emptyHeart from './emptyHeart.png';
-import filledHeart from './filledHeart.png';
+import emptyHeart from '../assets/emptyHeart.png';
+import filledHeart from '../assets/filledHeart.png';
 
 const HeartToggle = () => {
   const [isFilled, setIsFilled] = useState(false);

@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import Bar from '../components/Bars';
+import Bar from '../components/Header.js';
 import HeartToggle from '../components/HeartToggle';
-import WritePostButton from '../components/WritePostButton'; 
+import WritePostButton from '../components/Buttons/WritePostButton.js'; 
 import MoreInfoButton from '../components/MoreInfoButton.js'; 
 
 const PageContainer = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; 
+    justify-content: flex-start; 
+    align-items: center;
     height: 100vh; 
 `;
 
 const ButtonContainer = styled.div`
-    position: absolute;
     top: 526px;
     left: 75px;
     padding: 0;
@@ -42,7 +42,6 @@ const Box = styled.div`
 `;
 
 const MainBox = styled.div`
-    position: absolute;
     top: 110px;
     left: 75px;
     background-color: #D9D9D9;
@@ -68,13 +67,31 @@ const StoryTitle = styled.div`
 
 const Mainpage = () => {
     const [data, setData] = useState(null);
-    const [stories, setStories] = useState([]);
+    const [stories, setStories] = useState([
+        //게시물 초기값
+        {
+            id: 1,
+            title: '테스트',
+            author: '김태일',
+            content: '안녕하세요',
+        },
+        {
+            id: 2,
+            title: '테스트2',
+            author: '김태일',
+            content: '안녕하세요22',
+        },
+    ]);
+    //경로 이동시켜줄 때
     const navigate = useNavigate();
 
+    //처음 렌더링 시 호출
     useEffect(() => {
         axios.get('http://localhost:8001/api/data')
             .then(response => {
-                setData(response.data.message);
+                if (response.data) {
+                    setData(response.data.message);
+                }
             })
             .catch(error => {
                 console.error('There was an error fetching the data!', error);
@@ -99,7 +116,8 @@ const Mainpage = () => {
             <MainBox>
                 <Line size="40px" bold>모두와 함께 스토리를 작성하다</Line>
                 <Line size="40px"></Line>
-                <Line size="30px">다른 사람과 함께 이야기를 이어나가 보세요!</Line>
+                <Line size="40px"></Line>
+                <Line size="24px">다른 사람과 함께 이야기를 이어나가 보세요!</Line>
                 <MoreInfoButton />
             </MainBox>
             <ButtonContainer>

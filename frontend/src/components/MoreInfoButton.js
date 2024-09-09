@@ -15,7 +15,7 @@ const StyledButton = styled.button`
     text-align: center; 
     position: absolute;
     top: 260px;
-    left: 370px;
+    left: 390px;
 `;
 
 const MoreInfoButton = () => {

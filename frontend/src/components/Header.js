@@ -10,7 +10,7 @@ const WebBar = styled.div`
     justify-content: flex-start;
     border: 1px solid #C8C8C8;
     background: #E7F8FF;
-    padding-left-16px;
+    padding-left: 16px;
 `;
 
 const HomeLink = styled(Link)`
