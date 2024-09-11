@@ -4,7 +4,15 @@ module.exports = class Post extends Sequelize.Model {
   static init(sequelize) {
     return super.init({
       content: {
-        type: Sequelize.STRING(140),
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      title: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      nickname: {
+        type: Sequelize.STRING,
         allowNull: false,
       },
       img: {
@@ -20,7 +28,8 @@ module.exports = class Post extends Sequelize.Model {
       paranoid: false,
       charset: 'utf8mb4',
       collate: 'utf8mb4_general_ci',
-    });
+    }, 
+  );
   }
 
   static associate(db) {

@@ -2,7 +2,7 @@
   "development": {
     "username": "root",
     "password": "ljy74377437",
-    "database": "database_development",
+    "database": "miniproject_wink",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },

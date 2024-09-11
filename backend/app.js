@@ -16,6 +16,8 @@ const pageRouter = require('./routes/page');
 const authRouter = require('./routes/auth');
 const postRouter = require('./routes/post');
 const userRouter = require('./routes/user');
+const continuingRouter = require('./routes/continuingpage');
+const writingRouter = require('./routes/writingpage');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
 
@@ -40,26 +42,6 @@ sequelize.sync({ force: false })
 
 app.use(bodyParser.json());
 
-app.post('/api/submit', (req, res) => {
-    const { nickname, story } = req.body;
-
-    // 입력값 검증 (옵션)
-    if (!nickname || !story) {
-        return res.status(400).json({ error: '닉네임과 이야기는 필수 항목입니다.' });
-    }
-
-    // 데이터베이스에 데이터 삽입
-    const query = 'INSERT INTO stories (nickname, story) VALUES (?, ?)';
-    connection.query(query, [nickname, story], (err, results) => {
-        if (err) {
-            console.error('Error inserting data:', err);
-            return res.status(500).json({ error: '서버 오류입니다.' });
-        }
-        res.status(200).json({ message: '데이터가 성공적으로 저장되었습니다.' });
-    });
-});
-
-
 app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/img', express.static(path.join(__dirname, 'uploads')));
@@ -81,11 +63,10 @@ app.use(passport.session());
 
 app.use('/', pageRouter);
 app.use('/detailpage', postRouter);
-app.use('/writingpage', authRouter);
-app.use('/continuingpage', postRouter); //수정페이지
+app.use('/writingpage', writingRouter);
+app.use('/continuingpage', continuingRouter); //수정페이지
 app.use('/Top10', postRouter);
 //app.use('/user', userRouter);
-
 
 // catch-all 라우트 추가
 app.get('*', (req, res) => {

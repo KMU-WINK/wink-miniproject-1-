@@ -108,6 +108,9 @@ const Button = styled.button`
     cursor: pointer;
     margin-top: auto;
     margin-bottom: 15px;
+    position: relative;
+    z-index: 1; /* 다른 요소들 위에 위치하도록 설정 */
+
 
     &:hover {
         background-color: #4DCAFF;
@@ -115,33 +118,51 @@ const Button = styled.button`
     }
 `;
 
-// Textarea 자동 크기 조절 핸들러
-const useAutoResize = (ref) => {
-    useEffect(() => {
-        const handleInput = () => {
-            const textarea = ref.current;
-            textarea.style.height = 'auto'; 
-            textarea.style.height = `${textarea.scrollHeight}px`; 
-        };
-
-        const textarea = ref.current;
-        textarea.addEventListener('input', handleInput);
-        return () => textarea.removeEventListener('input', handleInput);
-    }, [ref]);
-};
-
-const ContinuingStory = () => {
+const WritingPage = () => {
     const inputStoryRef = useRef(null);
-    useAutoResize(inputStoryRef);
+    const inputNameRef = useRef(null);
+    const inputTitleRef = useRef(null);
+
+    const handleButtonClick = async () => {
+        console.log('Button clicked!');  // 버튼 클릭 확인
+
+        const nickname = inputNameRef.current.value;
+        const story = inputStoryRef.current.value;
+        const title = inputTitleRef.current.value;
+
+        if (!nickname || !story || !title) {
+            alert('모든 필드를 입력해주세요.');
+            return;
+        }
+
+        console.log('Sending data to backend:', { nickname, story, title });
+
+        const response = await fetch('/writingpage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nickname, story, title }),
+        });
+
+        if (response.ok) {
+            inputNameRef.current.value = '';
+            inputStoryRef.current.value = '';
+            inputTitleRef.current.value = '';
+            alert('데이터가 성공적으로 저장되었습니다.');
+        } else {
+            alert('데이터 저장에 실패했습니다.');
+        }
+    };
 
     return (
         <PageContainer>
             <Bar />
             <MyComponent />
             <NameLabel htmlFor="nickname">닉네임</NameLabel>
-            <InputName id="nickname" placeholder="사용할 닉네임을 입력해주세요." />
+            <InputName id="nickname" placeholder="사용할 닉네임을 입력해주세요." ref={inputNameRef} />
             <TitleLabel htmlFor="title">제목</TitleLabel>
-            <InputTitle id="title" placeholder="소설의 제목을 입력해주세요." />
+            <InputTitle id="title" placeholder="소설의 제목을 입력해주세요." ref={inputTitleRef} />
             <StoryLabel htmlFor='story'>내용</StoryLabel>
             <InputStory
                 id="story"
@@ -149,10 +170,10 @@ const ContinuingStory = () => {
                 ref={inputStoryRef}
             />
             <ButtonWrapper>
-                <Button>제출하기</Button>
+                <Button onClick = {handleButtonClick} >제출하기</Button>
             </ButtonWrapper>
         </PageContainer>
     );
 }
 
-export default ContinuingStory;
+export default WritingPage;

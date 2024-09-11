@@ -11,7 +11,7 @@ const PageContainer = styled.div`
 
 const ButtonWrapper = styled.div`
     margin-top: auto;
-    margin-bottom: 40px;
+    margin-bottom: 40px;    
     display: flex;
     justify-content: center;
 `;
@@ -93,30 +93,50 @@ const Button = styled.button`
 `;
 
 // Textarea 자동 크기 조절 핸들러
-const useAutoResize = (ref) => {
-    useEffect(() => {
-        const handleInput = () => {
-            const textarea = ref.current;
-            textarea.style.height = 'auto'; 
-            textarea.style.height = `${textarea.scrollHeight}px`; 
-        };
-
-        const textarea = ref.current;
-        textarea.addEventListener('input', handleInput);
-        return () => textarea.removeEventListener('input', handleInput);
-    }, [ref]);
-};
-
 const ContinuingStory = () => {
+    const inputNameRef = useRef(null);
     const inputStoryRef = useRef(null);
-    useAutoResize(inputStoryRef);
+
+    const handleButtonClick = async () => {
+        console.log('Button clicked!');  // 버튼 클릭 확인
+
+        const nickname = inputNameRef.current?.value;
+        const story = inputStoryRef.current?.value;
+
+        if (!nickname || !story) {
+            alert('모든 필드를 입력해주세요.');
+            return;
+        }
+
+        console.log('Sending data to backend:', { nickname, story });
+
+        const response = await fetch('/continuingpage', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nickname, story }),
+        });
+
+        if (response.ok) {
+            inputNameRef.current.value = '';
+            inputStoryRef.current.value = '';
+            alert('데이터가 성공적으로 저장되었습니다.');
+        } else {
+            alert('데이터 저장에 실패했습니다.');
+        }
+    };
 
     return (
         <PageContainer>
             <Bar />
             <MyComponent />
             <NameLabel htmlFor="nickname">닉네임</NameLabel>
-            <InputName id="nickname" placeholder="사용할 닉네임을 입력해주세요." />
+            <InputName
+                id="nickname"
+                placeholder="사용할 닉네임을 입력해주세요."
+                ref={inputNameRef}
+            />
             <StoryLabel htmlFor='story'>내용</StoryLabel>
             <InputStory
                 id="story"
@@ -124,7 +144,7 @@ const ContinuingStory = () => {
                 ref={inputStoryRef}
             />
             <ButtonWrapper>
-                <Button>제출하기</Button>
+                <Button onClick={handleButtonClick}>제출하기</Button>
             </ButtonWrapper>
         </PageContainer>
     );
