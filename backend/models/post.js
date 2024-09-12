@@ -9,7 +9,8 @@ module.exports = class Post extends Sequelize.Model {
       },
       title: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: true,
+        defaultValue: 'Untitled Story'
       },
       nickname: {
         type: Sequelize.STRING,
