@@ -21,7 +21,6 @@ const ButtonContainer = styled.div`
     display: flex;
     justify-content: flex-start;
     width: 1310px;
-    padding: 0;
 `;
 
 const Box = styled.div`
