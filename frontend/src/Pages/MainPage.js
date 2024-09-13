@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Bar from '../components/Header.js';
 import HeartToggle from '../components/HeartToggle';
 import WritePostButton from '../components/Buttons/WritePostButton.js'; 
-import MoreInfoButton from '../components/MoreInfoButton.js'; 
+import MoreInfoButton from '../components/Buttons/MoreInfoButton.js'; 
 
 const PageContainer = styled.div`
     position: relative;
@@ -17,8 +17,10 @@ const PageContainer = styled.div`
 `;
 
 const ButtonContainer = styled.div`
-    top: 526px;
-    left: 75px;
+    margin-top: 15px;
+    display: flex;
+    justify-content: flex-start;
+    width: 1310px;
     padding: 0;
 `;
 
@@ -30,7 +32,7 @@ const Box = styled.div`
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    margin: 20px 0;
+    margin: 20px;
     text-align: center;
     font-size: 16px;
     color: #323232;
@@ -47,9 +49,9 @@ const MainBox = styled.div`
     background-color: #D9D9D9;
     width: 1290px;
     height: 398px;
+    padding: 10px;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: center;
     text-align: center;
 `;
@@ -65,6 +67,12 @@ const StoryTitle = styled.div`
     color: #323232;
 `;
 
+const ButtonWrapper = styled.div`
+    margin-top: 15px;
+    display: flex;
+    margin-left: 390px;
+`;
+
 const Mainpage = () => {
     const [data, setData] = useState(null);
     const [stories, setStories] = useState([
@@ -74,16 +82,32 @@ const Mainpage = () => {
             title: '테스트',
             author: '김태일',
             content: '안녕하세요',
+            liked: false,
         },
         {
             id: 2,
             title: '테스트2',
             author: '김태일',
             content: '안녕하세요22',
+            liked: false,
         },
     ]);
     //경로 이동시켜줄 때
     const navigate = useNavigate();
+
+    const handleBoxClick = (id) => {
+        setStories(stories.map(story => 
+            story.id === id ? { ...story, liked: !story.liked } : story
+        ));
+        navigate('/detailpage');
+    };
+
+    const handleHeartClick = (e, id) => {
+        e.stopPropagation();  // 이벤트 전파 방지
+        setStories(stories.map(story => 
+            story.id === id ? { ...story, liked: !story.liked } : story
+        ));
+    };
 
     //처음 렌더링 시 호출
     useEffect(() => {
@@ -106,10 +130,6 @@ const Mainpage = () => {
             });
     }, []);
 
-    const handleBoxClick = () => {
-        navigate('/detailpage');
-    };
-
     return (
         <PageContainer>
             <Bar />
@@ -118,7 +138,9 @@ const Mainpage = () => {
                 <Line size="40px"></Line>
                 <Line size="40px"></Line>
                 <Line size="24px">다른 사람과 함께 이야기를 이어나가 보세요!</Line>
-                <MoreInfoButton />
+                <ButtonWrapper>
+                    <MoreInfoButton />
+                </ButtonWrapper>
             </MainBox>
             <ButtonContainer>
                 <WritePostButton />
@@ -126,7 +148,10 @@ const Mainpage = () => {
             {stories.map(story => (
                 <Box key={story.id} onClick={handleBoxClick}>
                     <StoryTitle>{story.title}</StoryTitle>
-                    <HeartToggle />
+                    <HeartToggle 
+                        isFilled={story.liked} 
+                        onClick={(e) => handleHeartClick(e, story.id)} 
+                    />
                 </Box>
             ))}
         </PageContainer>
