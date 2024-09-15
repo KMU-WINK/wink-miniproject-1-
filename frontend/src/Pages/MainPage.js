@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -75,7 +75,6 @@ const ButtonWrapper = styled.div`
 const Mainpage = () => {
     const [data, setData] = useState(null);
     const [stories, setStories] = useState([
-        //게시물 초기값
         {
             id: 1,
             title: '테스트',
@@ -91,14 +90,12 @@ const Mainpage = () => {
             liked: false,
         },
     ]);
-    //경로 이동시켜줄 때
+
     const navigate = useNavigate();
 
-    const handleBoxClick = (id) => {
-        setStories(stories.map(story => 
-            story.id === id ? { ...story, liked: !story.liked } : story
-        ));
-        navigate('/detailpage');
+    const handleBoxClick = (story) => {
+        // story 객체를 state로 전달
+        navigate('/detailpage', { state: { story } }); 
     };
 
     const handleHeartClick = (e, id) => {
@@ -108,7 +105,6 @@ const Mainpage = () => {
         ));
     };
 
-    //처음 렌더링 시 호출
     useEffect(() => {
         axios.get('http://localhost:8001/api/data')
             .then(response => {
@@ -145,7 +141,7 @@ const Mainpage = () => {
                 <WritePostButton />
             </ButtonContainer>
             {stories.map(story => (
-                <Box key={story.id} onClick={handleBoxClick}>
+                <Box key={story.id} onClick={() => handleBoxClick(story)}>
                     <StoryTitle>{story.title}</StoryTitle>
                     <HeartToggle 
                         isFilled={story.liked} 
