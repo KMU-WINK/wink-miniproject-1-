@@ -81,30 +81,11 @@ const Mainpage = () => {
             author: '김태일',
             content: '안녕하세요22',
         },
-    ]);
+    ]); 
     //경로 이동시켜줄 때
     const navigate = useNavigate();
 
-    //처음 렌더링 시 호출
-    useEffect(() => {
-        axios.get('http://localhost:8001/api/data')
-            .then(response => {
-                if (response.data) {
-                    setData(response.data.message);
-                }
-            })
-            .catch(error => {
-                console.error('There was an error fetching the data!', error);
-            });
 
-        axios.get('http://localhost:8001/api/stories')
-            .then(response => {
-                setStories(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the stories!', error);
-            });
-    }, []);
 
     const handleBoxClick = () => {
         navigate('/detailpage');

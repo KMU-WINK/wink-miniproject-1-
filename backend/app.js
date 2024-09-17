@@ -66,7 +66,27 @@ app.use('/detailpage', postRouter);
 app.use('/writingpage', writingRouter);
 app.use('/continuingpage', continuingRouter); //수정페이지
 app.use('/Top10', postRouter);
-//app.use('/user', userRouter);
+//app.use('/user', userRouter);\
+
+app.post('/continuingpage', (req, res) => {
+  const { nickname, story, storyId } = req.body;
+
+  // storyId로 기존 스토리를 찾고 이어붙이기 (예시)
+  Story.findById(storyId, (err, existingStory) => {
+      if (err || !existingStory) {
+          return res.status(404).send('스토리를 찾을 수 없습니다.');
+      }
+
+      // 기존 내용에 새로운 내용을 이어붙임
+      existingStory.content += `\n\n${nickname}: ${story}`;
+
+      existingStory.save((err) => {
+          if (err) return res.status(500).send('저장에 실패했습니다.');
+          res.status(200).send('스토리가 성공적으로 이어졌습니다.');
+      });
+  });
+});
+
 
 // catch-all 라우트 추가
 app.get('*', (req, res) => {
