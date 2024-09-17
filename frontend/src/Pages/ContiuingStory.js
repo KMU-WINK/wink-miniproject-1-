@@ -1,4 +1,5 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import styled from 'styled-components';
 import Bar from '../components/Header';
 
@@ -57,25 +58,6 @@ const InputStory = styled.textarea`
     box-sizing: border-box;
 `;
 
-const MyComponent = () => {
-    return <CustomH2>이야기를 이어나가 보세요</CustomH2>;
-};
-
-const NameLabel = styled.label`
-    align-self: stretch;
-    font-style: normal;
-    line-height: 140%; /* 22.4px */
-    margin-left: 75px;
-`;
-
-const StoryLabel = styled.label`
-    align-self: stretch;
-    font-style: normal;
-    line-height: 140%; /* 22.4px */
-    margin-left: 75px;
-    margin-top: 30px;
-`;
-
 const Button = styled.button`
     padding: 10px 20px;
     background-color: #E7F8FF;
@@ -92,14 +74,13 @@ const Button = styled.button`
     }
 `;
 
-// Textarea 자동 크기 조절 핸들러
 const ContinuingStory = () => {
     const inputNameRef = useRef(null);
     const inputStoryRef = useRef(null);
+    const location = useLocation(); // DetailPage에서 전달된 storyId 받기
+    const storyId = location.state?.storyId;
 
     const handleButtonClick = async () => {
-        console.log('Button clicked!');  // 버튼 클릭 확인
-
         const nickname = inputNameRef.current?.value;
         const story = inputStoryRef.current?.value;
 
@@ -108,19 +89,15 @@ const ContinuingStory = () => {
             return;
         }
 
-        console.log('Sending data to backend:', { nickname, story });
-
         const response = await fetch('/continuingpage', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ nickname, story }),
+            body: JSON.stringify({ nickname, story, storyId }),
         });
 
         if (response.ok) {
-            inputNameRef.current.value = '';
-            inputStoryRef.current.value = '';
             alert('데이터가 성공적으로 저장되었습니다.');
         } else {
             alert('데이터 저장에 실패했습니다.');
@@ -130,14 +107,14 @@ const ContinuingStory = () => {
     return (
         <PageContainer>
             <Bar />
-            <MyComponent />
-            <NameLabel htmlFor="nickname">닉네임</NameLabel>
+            <CustomH2>이야기를 이어나가 보세요</CustomH2>
+            <label htmlFor="nickname">닉네임</label>
             <InputName
                 id="nickname"
                 placeholder="사용할 닉네임을 입력해주세요."
                 ref={inputNameRef}
             />
-            <StoryLabel htmlFor='story'>내용</StoryLabel>
+            <label htmlFor='story'>내용</label>
             <InputStory
                 id="story"
                 placeholder="이어갈 소설의 내용을 입력해주세요."
@@ -148,6 +125,6 @@ const ContinuingStory = () => {
             </ButtonWrapper>
         </PageContainer>
     );
-}
+};
 
 export default ContinuingStory;

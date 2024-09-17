@@ -11,6 +11,7 @@ const WebBar = styled.div`
     border: 1px solid #C8C8C8;
     background: #E7F8FF;
     padding-left: 16px;
+    width: 100%;
 `;
 
 const HomeLink = styled(Link)`
