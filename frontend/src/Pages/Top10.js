@@ -3,6 +3,7 @@ import axios from 'axios';
 import styled from 'styled-components';
 import Bar from '../components/Header';
 import HeartToggle from '../components/HeartToggle';
+import '../App.css';
 
 const PageContainer = styled.div`
     display: flex;

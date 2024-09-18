@@ -6,12 +6,12 @@ const WebBar = styled.div`
     height: 50px;
     flex-shrink: 0;
     display: flex;
-    align-items: center;
     justify-content: flex-start;
     border: 1px solid #C8C8C8;
     background: #E7F8FF;
-    padding-left: 16px;
     width: 100%;
+    margin: 0;
+    padding: 0;
 `;
 
 const HomeLink = styled(Link)`

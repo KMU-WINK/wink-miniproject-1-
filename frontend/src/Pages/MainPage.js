@@ -4,16 +4,19 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Bar from '../components/Header.js';
 import HeartToggle from '../components/HeartToggle';
-import WritePostButton from '../components/Buttons/WritePostButton.js'; 
-import MoreInfoButton from '../components/Buttons/MoreInfoButton.js'; 
+import WritePostButton from '../components/Buttons/WritePostButton.js';
+import MoreInfoButton from '../components/Buttons/MoreInfoButton.js';
+import '../App.css';
 
 const PageContainer = styled.div`
     position: relative;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; 
+    justify-content: flex-start;
     align-items: center;
-    height: 100vh; 
+    height: 100vh;
+    padding: 0;
+    margin: 0;
 `;
 
 const ButtonContainer = styled.div`
@@ -89,24 +92,18 @@ const Mainpage = () => {
             content: '안녕하세요22',
             liked: false,
         },
-<<<<<<< HEAD
-    ]); 
-    //경로 이동시켜줄 때
-    const navigate = useNavigate();
-
-=======
     ]);
 
     const navigate = useNavigate();
 
     const handleBoxClick = (story) => {
         // story 객체를 state로 전달
-        navigate('/detailpage', { state: { story } }); 
+        navigate('/detailpage', { state: { story } });
     };
 
     const handleHeartClick = (e, id) => {
         e.stopPropagation();  // 이벤트 전파 방지
-        setStories(stories.map(story => 
+        setStories(stories.map(story =>
             story.id === id ? { ...story, liked: !story.liked } : story
         ));
     };
@@ -121,8 +118,15 @@ const Mainpage = () => {
             .catch(error => {
                 console.error('There was an error fetching the data!', error);
             });
->>>>>>> 586ba2b2c30a9f9a0a0f021e6fc2d703edf3e30f
 
+        axios.get('http://localhost:8001/api/stories')
+            .then(response => {
+                setStories(response.data);
+            })
+            .catch(error => {
+                console.error('There was an error fetching the stories!', error);
+            });
+    }, []);
 
     return (
         <PageContainer>
@@ -142,14 +146,14 @@ const Mainpage = () => {
             {stories.map(story => (
                 <Box key={story.id} onClick={() => handleBoxClick(story)}>
                     <StoryTitle>{story.title}</StoryTitle>
-                    <HeartToggle 
-                        isFilled={story.liked} 
-                        onClick={(e) => handleHeartClick(e, story.id)} 
+                    <HeartToggle
+                        isFilled={story.liked}
+                        onClick={(e) => handleHeartClick(e, story.id)}
                     />
                 </Box>
             ))}
         </PageContainer>
     );
-}
+};
 
 export default Mainpage;

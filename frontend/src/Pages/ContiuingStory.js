@@ -1,7 +1,8 @@
 import React, { useRef } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import Bar from '../components/Header';
+import '../App.css';
 
 const PageContainer = styled.div`
     display: flex;
@@ -28,6 +29,14 @@ const CustomH2 = styled.h2`
     margin-left: 30px; 
 `;
 
+const Label = styled.label`
+    display: block;
+    margin-left: 75px;
+    margin-bottom: 5px;
+    font-size: 16px;
+    color: #333;
+`;
+
 const InputName = styled.textarea`
     width: calc(100% - 150px);
     max-width: 1325px;
@@ -37,7 +46,6 @@ const InputName = styled.textarea`
     border: 1px solid #C8C8C8;
     border-radius: 5px;
     font-size: 16px;
-    margin-left: 75px;
     display: block;
     resize: none; 
     box-sizing: border-box;
@@ -52,7 +60,6 @@ const InputStory = styled.textarea`
     border: 1px solid #C8C8C8;
     border-radius: 5px;
     font-size: 16px;
-    margin-left: 75px;
     display: block;
     resize: vertical; 
     box-sizing: border-box;
@@ -79,6 +86,7 @@ const ContinuingStory = () => {
     const inputStoryRef = useRef(null);
     const location = useLocation(); // DetailPage에서 전달된 storyId 받기
     const storyId = location.state?.storyId;
+    const navigate = useNavigate(); // Navigation hook 추가
 
     const handleButtonClick = async () => {
         const nickname = inputNameRef.current?.value;
@@ -99,6 +107,8 @@ const ContinuingStory = () => {
 
         if (response.ok) {
             alert('데이터가 성공적으로 저장되었습니다.');
+            // Navigate back to DetailPage and refresh it
+            navigate(`/detailpage/${storyId}`); // 필요한 URL로 변경
         } else {
             alert('데이터 저장에 실패했습니다.');
         }
@@ -108,13 +118,13 @@ const ContinuingStory = () => {
         <PageContainer>
             <Bar />
             <CustomH2>이야기를 이어나가 보세요</CustomH2>
-            <label htmlFor="nickname">닉네임</label>
+            <Label htmlFor="nickname">닉네임</Label>
             <InputName
                 id="nickname"
                 placeholder="사용할 닉네임을 입력해주세요."
                 ref={inputNameRef}
             />
-            <label htmlFor='story'>내용</label>
+            <Label htmlFor='story'>내용</Label>
             <InputStory
                 id="story"
                 placeholder="이어갈 소설의 내용을 입력해주세요."

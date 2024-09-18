@@ -1,5 +1,6 @@
-.App {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 20px;
+/* index.css */
+body, html {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
