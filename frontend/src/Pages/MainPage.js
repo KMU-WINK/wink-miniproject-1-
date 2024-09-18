@@ -45,6 +45,13 @@ const Box = styled.div`
     }
 `;
 
+const TextContainer = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; 
+    margin-left: 30px;
+`
+
 const MainBox = styled.div`
     top: 110px;
     left: 75px;
@@ -64,9 +71,34 @@ const Line = styled.div`
     font-weight: ${props => props.bold ? 'bold' : 'normal'};
 `;
 
-const StoryTitle = styled.div`
+const StoryAuthor = styled.div`
     font-size: 20px;
-    color: #323232;
+    color: #6D6D6D;
+    font-weight: 600;
+    margin-bottom: 15px;
+    &::before {
+        content: "by. ";
+    }
+`;
+
+const StoryTitle = styled.div`
+    font-size: 16px;
+    color: #6D6D6D;
+    font-weight: 600;
+    &::before {
+        content: "제목: ";
+    }
+`;
+
+const StoryContent = styled.div`
+    font-size: 16px;
+    color: #6D6D6D;
+    font-weight: 400;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
 `;
 
 const ButtonWrapper = styled.div`
@@ -145,7 +177,11 @@ const Mainpage = () => {
             </ButtonContainer>
             {stories.map(story => (
                 <Box key={story.id} onClick={() => handleBoxClick(story)}>
+                    <TextContainer>
+                    <StoryAuthor>{story.author}</StoryAuthor>
                     <StoryTitle>{story.title}</StoryTitle>
+                    <StoryContent>{story.content}</StoryContent>
+                    </TextContainer>
                     <HeartToggle
                         isFilled={story.liked}
                         onClick={(e) => handleHeartClick(e, story.id)}
