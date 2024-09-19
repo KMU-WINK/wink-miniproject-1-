@@ -50,7 +50,7 @@ const TextContainer = styled.div`
     flex-direction: column;
     align-items: flex-start; 
     margin-left: 30px;
-`
+`;
 
 const MainBox = styled.div`
     top: 110px;
@@ -107,29 +107,11 @@ const ButtonWrapper = styled.div`
     margin-left: 390px;
 `;
 
-const Mainpage = () => {
-    const [data, setData] = useState(null);
-    const [stories, setStories] = useState([
-        {
-            id: 1,
-            title: '테스트',
-            author: '김태일',
-            content: '안녕하세요',
-            liked: false,
-        },
-        {
-            id: 2,
-            title: '테스트2',
-            author: '김태일',
-            content: '안녕하세요22',
-            liked: false,
-        },
-    ]);
-
+const MainPage = () => {
+    const [stories, setStories] = useState([]);
     const navigate = useNavigate();
 
     const handleBoxClick = (story) => {
-        // story 객체를 state로 전달
         navigate('/detailpage', { state: { story } });
     };
 
@@ -141,22 +123,17 @@ const Mainpage = () => {
     };
 
     useEffect(() => {
-        axios.get('http://localhost:8001/api/data')
+        axios.get('http://localhost:3000/api/stories')
             .then(response => {
-                if (response.data) {
-                    setData(response.data.message);
+                if (Array.isArray(response.data)) {
+                    console.log(response.data);
+                    setStories(response.data);  // 응답이 배열이면 상태로 저장
+                } else {
+                    console.error('응답 데이터가 배열이 아닙니다:', response.data);
                 }
             })
             .catch(error => {
-                console.error('There was an error fetching the data!', error);
-            });
-
-        axios.get('http://localhost:8001/api/stories')
-            .then(response => {
-                setStories(response.data);
-            })
-            .catch(error => {
-                console.error('There was an error fetching the stories!', error);
+                console.error('스토리를 가져오는 중 오류가 발생했습니다.', error);
             });
     }, []);
 
@@ -165,7 +142,6 @@ const Mainpage = () => {
             <Bar />
             <MainBox>
                 <Line size="40px" bold>모두와 함께 스토리를 작성하다</Line>
-                <Line size="40px"></Line>
                 <Line size="40px"></Line>
                 <Line size="24px">다른 사람과 함께 이야기를 이어나가 보세요!</Line>
                 <ButtonWrapper>
@@ -178,9 +154,9 @@ const Mainpage = () => {
             {stories.map(story => (
                 <Box key={story.id} onClick={() => handleBoxClick(story)}>
                     <TextContainer>
-                    <StoryAuthor>{story.author}</StoryAuthor>
-                    <StoryTitle>{story.title}</StoryTitle>
-                    <StoryContent>{story.content}</StoryContent>
+                        <StoryAuthor>{story.nickname}</StoryAuthor>
+                        <StoryTitle>{story.title}</StoryTitle>
+                        <StoryContent>{story.content}</StoryContent>
                     </TextContainer>
                     <HeartToggle
                         isFilled={story.liked}
@@ -192,4 +168,4 @@ const Mainpage = () => {
     );
 };
 
-export default Mainpage;
+export default MainPage;

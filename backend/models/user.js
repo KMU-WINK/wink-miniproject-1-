@@ -1,39 +1,39 @@
-const Sequelize = require('sequelize');
+const { Model, DataTypes } = require('sequelize');
 
-module.exports = class User extends Sequelize.Model {
+module.exports = class Post extends Model {
   static init(sequelize) {
     return super.init({
-      email: {
-        type: Sequelize.STRING(40),
-        allowNull: true,
-        unique: true,
-      },
-      nick: {
-        type: Sequelize.STRING(15),
+      content: {
+        type: DataTypes.STRING,
         allowNull: false,
       },
-      password: {
-        type: Sequelize.STRING(100),
+      title: {
+        type: DataTypes.STRING,
         allowNull: true,
+        defaultValue: 'Untitled Story'
       },
-      provider: {
-        type: Sequelize.STRING(10),
+      nickname: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'local',
       },
-      snsId: {
-        type: Sequelize.STRING(30),
+      img: {
+        type: DataTypes.STRING(200),
         allowNull: true,
       },
     }, {
       sequelize,
       timestamps: true,
       underscored: false,
-      modelName: 'User',
-      tableName: 'users',
-      paranoid: true,
-      charset: 'utf8',
-      collate: 'utf8_general_ci',
+      modelName: 'Post',
+      tableName: 'posts',
+      paranoid: false,
+      charset: 'utf8mb4',
+      collate: 'utf8mb4_general_ci',
     });
   }
-}
+
+  static associate(db) {
+    db.Post.belongsTo(db.User);
+    db.Post.belongsToMany(db.Hashtag, { through: 'PostHashtag' });
+  }
+};

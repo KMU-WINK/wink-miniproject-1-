@@ -3,8 +3,8 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
-const { Post, Hashtag } = require('../models');
-//const { isLoggedIn } = require('./middlewares');
+const { Story, Post, Hashtag } = require('../models'); // Post 대신 Story를 가져옴
+// const { isLoggedIn } = require('./middlewares');
 
 const router = express.Router();
 
@@ -33,25 +33,29 @@ router.post('/', upload2.none(), async (req, res, next) => {
     try {
         console.log('Received data from frontend:', req.body);
 
-        const { nickname, story, title } = req.body
+        const { nickname, story, title } = req.body;
 
-        const post = await Post.create({
+        // stories 테이블에 데이터 저장
+        const newStory = await Story.create({
             nickname,
-            content: story,
+            content: story, // content에 story 저장
             title
         });
-        const hashtags = req.body.story.match(/#[^\s#]*/g);
+
+        // 해시태그 처리 (선택사항)
+        const hashtags = story.match(/#[^\s#]*/g);
         if (hashtags) {
             const result = await Promise.all(
                 hashtags.map(tag => {
                     return Hashtag.findOrCreate({
                         where: { title: tag.slice(1).toLowerCase() },
-                    })
-                }),
+                    });
+                })
             );
-            await post.addHashtags(result.map(r => r[0]));
+            await newStory.addHashtags(result.map(r => r[0]));
         }
-        res.status(200).json({ message: '데이터가 성공적으로 저장되었습니다.' });
+
+        res.status(200).json({ message: '스토리가 성공적으로 저장되었습니다.' });
     } catch (error) {
         console.error(error);
         next(error);

@@ -1,31 +1,29 @@
 const Sequelize = require('sequelize');
 const env = process.env.NODE_ENV || 'development';
 const config = require('../config/config')[env];
-const User = require('./user');
-const Post = require('./post');
+
+// sequelize 초기화
+const sequelize = new Sequelize(config.database, config.username, config.password, config);
+
+// 모델 가져오기
+const User = require('./user'); // 함수 호출하지 않음
+const Post = require('./post'); // 함수 호출하지 않음
 const Hashtag = require('./hashtag');
+const Story = require('./story');
 
-User.associate = (models) => {
-  // 예: User는 여러 Post를 가질 수 있음 (1:N 관계)
-  User.hasMany(models.Post);
-};
-
+// db 객체 생성
 const db = {};
-const sequelize = new Sequelize(
-  config.database, config.username, config.password, config,
-);
-
+db.Sequelize = Sequelize;
 db.sequelize = sequelize;
-db.User = User;
-db.Post = Post;
-db.Hashtag = Hashtag;
+db.User = User.init(sequelize, Sequelize); // 모델을 초기화
+db.Post = Post.init(sequelize, Sequelize); // 모델을 초기화
+db.Hashtag = Hashtag.init(sequelize, Sequelize); // 모델을 초기화
+db.Story = Story.init(sequelize, Sequelize); // 모델을 초기화
 
-User.init(sequelize);
-Post.init(sequelize);
-Hashtag.init(sequelize);
-
-User.associate(db);
-Post.associate(db);
-Hashtag.associate(db);
+// 모델 간의 관계 설정
+if (User.associate) User.associate(db);
+if (Post.associate) Post.associate(db);
+if (Hashtag.associate) Hashtag.associate(db);
+if (Story.associate) Story.associate(db);
 
 module.exports = db;

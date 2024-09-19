@@ -10,6 +10,8 @@ const mysql = require('mysql2');
 const bodyParser = require('body-parser');
 const port = 3000;
 const cors = require('cors');
+const db = require('./db');
+const sql = 'SELECT title, nickname, content FROM stories';
 
 dotenv.config();
 const pageRouter = require('./routes/page');
@@ -20,6 +22,7 @@ const continuingRouter = require('./routes/continuingpage');
 const writingRouter = require('./routes/writingpage');
 const { sequelize } = require('./models');
 const passportConfig = require('./passport');
+const getStoriesQuery = 'SELECT title, nickname, content FROM stories';
 
 const app = express();
 
@@ -32,6 +35,7 @@ nunjucks.configure('views', {
   express: app,
   watch: true,
 });
+
 sequelize.sync({ force: false })
   .then(() => {
     console.log('데이터베이스 연결 성공');
@@ -71,22 +75,48 @@ app.use('/Top10', postRouter);
 app.post('/continuingpage', (req, res) => {
   const { nickname, story, storyId } = req.body;
 
-  // storyId로 기존 스토리를 찾고 이어붙이기 (예시)
-  Story.findById(storyId, (err, existingStory) => {
-      if (err || !existingStory) {
+  // storyId로 기존 스토리 찾기
+  const findStoryQuery = 'SELECT content FROM stories WHERE id = ?';
+  
+  db.query(findStoryQuery, [storyId], (err, result) => {
+      if (err) {
+          console.error(err);
+          return res.status(500).send('스토리를 찾는 중 오류가 발생했습니다.');
+      }
+
+      if (result.length === 0) {
           return res.status(404).send('스토리를 찾을 수 없습니다.');
       }
 
-      // 기존 내용에 새로운 내용을 이어붙임
-      existingStory.content += `\n\n${nickname}: ${story}`;
+      // 기존 스토리에 새로운 내용을 이어붙임
+      const existingStoryContent = result[0].content;
+      const updatedStoryContent = `${existingStoryContent}\n\n${nickname}: ${story}`;
 
-      existingStory.save((err) => {
-          if (err) return res.status(500).send('저장에 실패했습니다.');
+      // 스토리 업데이트 쿼리
+      const updateStoryQuery = 'UPDATE stories SET content = ? WHERE id = ?';
+
+      db.query(updateStoryQuery, [updatedStoryContent, storyId], (err, result) => {
+          if (err) {
+              console.error(err);
+              return res.status(500).send('스토리를 업데이트하는 중 오류가 발생했습니다.');
+          }
+
           res.status(200).send('스토리가 성공적으로 이어졌습니다.');
       });
   });
 });
 
+app.get('/api/stories', (req, res) => {
+  const sql = 'SELECT title, nickname, content FROM stories';
+
+  db.query(sql, (err, results) => {
+      if (err) {
+          console.error('DB 쿼리 오류:', err);
+          return res.status(500).json({ error: '데이터베이스 오류' });
+      }
+      res.json(results);
+  });
+});
 
 // catch-all 라우트 추가
 app.get('*', (req, res) => {
